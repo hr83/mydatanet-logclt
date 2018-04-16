@@ -1,4 +1,29 @@
 {
+  "_from": "github:hr83/mydatanet-logclt#0.1.1",
+  "_id": "mydatanet-logclt@0.1.0",
+  "_inBundle": false,
+  "_integrity": "sha1-tbg8s5WIUHDN39dznuEbGYD0sgk=",
+  "_location": "/mydatanet-logclt",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "mydatanet-logclt@github:hr83/mydatanet-logclt#0.1.1",
+    "name": "mydatanet-logclt",
+    "escapedName": "mydatanet-logclt",
+    "rawSpec": "github:hr83/mydatanet-logclt#0.1.1",
+    "saveSpec": "github:hr83/mydatanet-logclt#0.1.1",
+    "fetchSpec": null,
+    "gitCommittish": "0.1.1"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "github:hr83/mydatanet-logclt#7a2f9655d834eeb2283951a1daa1cd266ec2b3c7",
+  "_spec": "mydatanet-logclt@github:hr83/mydatanet-logclt#0.1.1",
+  "_where": "/lenovi/PhpstormProjects/20602_i_myDatanet_Server_Maintenance/main/accessories/nodejs",
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "",
   "name": "mydatanet-logclt",
   "version": "0.1.0"
 }

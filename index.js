@@ -4,10 +4,26 @@ var util = require('util');
 var crypto = require('crypto');
 var events = require('events');
 
+
+// type......one of the LOG_... types
+const LOG_TYPES = {
+  LOG_SYSERR: 0x1000,
+  LOG_ALARM: 0x2000,
+  LOG_WARN: 0x3000,
+  LOG_USERACTION: 0x4000,
+  LOG_SYSACTION: 0x5000,
+  LOG_INFO: 0x6000,
+  LOG_DEBUG: 0x7000
+};
+
 var cfg = {
   "enable_console_log_on_error": true,
   "log_port": 17222,
-  "log_ip": '127.0.0.1'
+  "log_ip": '127.0.0.1',
+  "only_process_types": {
+    // copies properties ES6
+    ...LOG_TYPES
+  }
 };
 
 //----------------------------------------------------------------------------------------------------
@@ -91,11 +107,21 @@ Connection.prototype.destroy = function () {
 // dbevent...string if "1" or "2" the log message is also written into the server events (1 ... warning, 2 ... alarm)
 //----------------------------------------------------------------------------------------------------
 Connection.prototype.log = function (type, source, text, dbevent) {
+  return;
+  let isEnabled = false;
   try {
-    if (cfg.enable_console_log_on_error) {
-      console.log(type, source, text, dbevent);
+    Object.values(cfg.only_process_types).forEach(function (value) {
+        if (type & value) {
+          isEnabled = true;
+        }
+      });
+
+    if (isEnabled) {
+      if (cfg.enable_console_log_on_error) {
+        console.log(type, source, text, dbevent);
+      }
+      this.doLog(type, source, text, dbevent);
     }
-    this.doLog(type, source, text, dbevent);
   }
   catch (err) {
     this.doLog(0x1000, source, "LOG WARNING: " + err.message + " / Text" + text, 1);
@@ -119,7 +145,7 @@ Connection.prototype.doLog = function (type, source, text, dbevent) {
   var off = new Date(1999, 11, 31);
   var tz1 = now.getTimezoneOffset() * 60000;
   var tz2 = off.getTimezoneOffset() * 60000;
-  var ms = ( (now - tz1) - (off - tz2)) * 65.536;
+  var ms = ((now - tz1) - (off - tz2)) * 65.536;
 
   var msh = Math.floor(ms / 0xFFFFFFFF);
   var msl = Math.floor(ms % 0xFFFFFFFF);
@@ -158,10 +184,7 @@ module.exports = new Connection();
 module.exports.Cfg = cfg;
 
 // type......one of the LOG_... types
-module.exports.LOG_SYSERR = 0x1000;
-module.exports.LOG_ALARM = 0x2000;
-module.exports.LOG_WARN = 0x3000;
-module.exports.LOG_USERACTION = 0x4000;
-module.exports.LOG_SYSACTION = 0x5000;
-module.exports.LOG_INFO = 0x6000;
-module.exports.LOG_DEBUG = 0x7000;
+for (let k in LOG_TYPES) {
+  module.exports[k] = LOG_TYPES[k];
+}
+
